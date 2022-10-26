@@ -16,4 +16,14 @@ const todoSchema = mongoose.Schema({
     }
 })
 
+todoSchema.methods = {
+    findActive_AsyncAwait: function () {
+        return mongoose.model("Todo").find({status: "active"})
+    },
+
+    findActive_Callback: function (cb) {
+        return mongoose.model("Todo").find({ status: "active" }, cb)
+    }
+}
+
 module.exports = todoSchema
