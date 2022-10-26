@@ -5,8 +5,8 @@ const todoSchema = require('../schemas/todoSchema')
 const Todo = new mongoose.model('Todo', todoSchema)
 
 // GET ALL TODOS
-router.get('/', async (req, res) => {
-    await Todo.find({ status: "active" })
+router.get('/', (req, res) => {
+     Todo.find({ status: "active" })
         .select({
         _id: 0,
         __v: 0,
@@ -28,17 +28,17 @@ router.get('/', async (req, res) => {
 
 // GET A TODO BY ID
 router.get('/:id', async (req, res) => {
-    await Todo.find({ _id: req.params.id }, (err, data) => {
-            if (err) {
-                res.status(500).json({
-                    error: "There was a server side error!"
-                })
-            } else {
-                res.status(200).json({
-                    result: data,
-                })
-            }
-    }).clone().catch(function (err) { console.log(err) });
+    try {
+        const data = await Todo.find({ _id: req.params.id })
+        res.status(200).json({
+            result: data,
+            message: 'success'
+        })
+    } catch (err) {
+        res.status(500).json({
+            error: "There was a server side error!"
+        })
+    }
 })
 
 // POST A TODO
