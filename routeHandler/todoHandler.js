@@ -26,6 +26,25 @@ router.get('/', (req, res) => {
     })
 })
 
+// GET ACTIVE TODOS WITH #ASYNC_AWAIT
+router.get('/active-async', async (req, res) => {
+    const todo = new Todo()
+    const data = await todo.findActive_AsyncAwait()
+    res.status(200).json({
+        data
+    })
+})
+
+// GET ACTIVE TODOS WITH #CALLBACK
+router.get('/active-callback', (req, res) => {
+    const todo = new Todo()
+    todo.findActive_Callback((err, data) => {
+        res.status(200).json({
+            data
+        })
+    })
+})
+
 // GET A TODO BY ID
 router.get('/:id', async (req, res) => {
     try {
@@ -42,9 +61,9 @@ router.get('/:id', async (req, res) => {
 })
 
 // POST A TODO
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
     const newTodo = new Todo(req.body)
-    await newTodo.save(err => {
+    newTodo.save(err => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error!"
@@ -58,8 +77,8 @@ router.post('/', async (req, res) => {
 })
 
 // POST MULTIPLE TODOS
-router.post('/all', async (req, res) => {
-    await Todo.insertMany(req.body, err => {
+router.post('/all', (req, res) => {
+    Todo.insertMany(req.body, err => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error!"
@@ -102,8 +121,8 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE TODO
-router.delete('/:id', async (req, res) => {
-    await Todo.deleteOne({ _id: req.params.id }, (err) => {
+router.delete('/:id', (req, res) => {
+    Todo.deleteOne({ _id: req.params.id }, (err) => {
         if (err) {
             res.status(500).json({
                 error: "There was a server side error!"
