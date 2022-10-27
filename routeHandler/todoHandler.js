@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
         __v: 0,
         date: 0
     })
-        .limit(2)
+        .limit(10)
         .exec((err, data) => {
         if (err) {
             res.status(500).json({
@@ -58,6 +58,22 @@ router.get('/:id', async (req, res) => {
             error: "There was a server side error!"
         })
     }
+})
+
+// GET TODOS WHICH CONTAIN "JS"
+router.get('/js', async (req, res) => {
+    const data = await Todo.findByJs()
+    res.status(200).json({
+        data
+    })
+})
+
+// GET TODOS BY LANGUAGE
+router.get('/language', async (req, res) => {
+    const data = await Todo.find().byLanguage("js")
+    res.status(200).json({
+        data
+    })
 })
 
 // POST A TODO
