@@ -10,7 +10,7 @@ const checkLogin = (req, res, next) => {
         req.username = username
         req.userId = userId
         next()
-    } catch () {
+    } catch {
         next("Authentication failure!")
     }
 }
