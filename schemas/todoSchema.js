@@ -1,19 +1,44 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const todoSchema = mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: true,
     },
     description: String,
     status: {
         type: String,
-        enum: ['active', 'inactive']
+        enum: ["active", "inactive"],
     },
     date: {
         type: Date,
-        default: Date.now
-    }
-})
+        default: Date.now,
+    },
+});
 
-module.exports = todoSchema
+// instance methods
+todoSchema.methods = {
+    findActive_AsyncAwait: function () {
+        return mongoose.model("Todo").find({ status: "active" });
+    },
+
+    findActive_Callback: function (cb) {
+        return mongoose.model("Todo").find({ status: "active" }, cb);
+    },
+};
+
+// static methods
+todoSchema.statics = {
+    findByJS: function () {
+        return this.find({ title: /js/i });
+    },
+};
+
+// query helpers
+todoSchema.query = {
+    byLanguage: function (language) {
+        return this.find({ title: new RegExp(language, "i") })
+    },
+};
+
+module.exports = todoSchema;
