@@ -6,7 +6,7 @@ const router = express.Router()
 const userSchema = require('../schemas/userSchema')
 const User = new mongoose.model('User', userSchema)
 
-// LOGIN
+// SIGNUP
 router.post('/signup', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -62,6 +62,22 @@ router.post('/login', async (req, res) => {
     } catch {
         res.status(401).json({
             'error': "Authentication failed!"
+        })
+    }
+})
+
+
+router.get('/all', async (req, res) => {
+    try {
+        const users = await User.find().populate("todos")
+        res.status(200).json({
+            data: users,
+            'message': "Success!"
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Server side error!"
         })
     }
 })
